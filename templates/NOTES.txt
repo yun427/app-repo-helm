@@ -1,0 +1,26 @@
+Bookinfo应用已部署完成！
+
+1. 获取产品页面URL：
+{{- if contains "ClusterIP" .Values.service.type }}
+export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app=productpage" -o jsonpath="{.items[0].metadata.name}")
+echo "访问产品页面："
+echo "kubectl port-forward $POD_NAME 9080:9080"
+echo "然后在浏览器中访问 http://127.0.0.1:9080/productpage"
+{{- else if contains "LoadBalancer" .Values.service.type }}
+{{- $lb := (lookup "v1" "Service" .Release.Namespace "productpage").status.loadBalancer -}}
+{{- if $lb.ingress }}
+{{- range $lb.ingress }}
+echo "访问产品页面：http://{{ .hostname }}:{{ $.Values.service.port }}/productpage"
+{{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.service.type }}
+export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services productpage)
+export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+echo "访问产品页面：http://$NODE_IP:$NODE_PORT/productpage"
+{{- end }}
+
+2. 查看部署状态：
+kubectl get pods -n {{ .Release.Namespace }}
+
+3. 查看服务：
+kubectl get svc -n {{ .Release.Namespace }}

@@ -1,0 +1,14 @@
+{{- if .Values.reviews.v3.enabled }}
+{{- include "bookinfo._deployment" (dict 
+  "deploymentName" "reviews-v3"
+  "component" "reviews"
+  "version" "v3"
+  "serviceAccount" .Values.reviews.serviceAccount
+  "imageName" "examples-bookinfo-reviews-v3"
+  "replicaCount" .Values.reviews.v3.replicaCount
+  "resources" .Values.reviews.resources
+  "Values" .Values
+  "Chart" .Chart
+  "Release" .Release
+) }}
+{{- end }}

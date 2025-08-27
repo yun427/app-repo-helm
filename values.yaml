@@ -1,0 +1,71 @@
+# 全局配置
+global:
+  imageRegistry: "swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/istio"
+  imageTag: "1.17.0"
+  
+  # 通用配置
+  storageClass: ""
+  domain: ""
+  
+  # 资源限制
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# 每个服务的配置
+details:
+  replicaCount: 1
+  serviceAccount:
+    create: true
+    name: "bookinfo-details"
+  # 服务特定资源覆盖
+  resources: {}
+  
+productpage:
+  replicaCount: 1
+  serviceAccount:
+    create: true
+    name: "bookinfo-productpage"
+  resources: {}
+  
+ratings:
+  replicaCount: 1
+  serviceAccount:
+    create: true
+    name: "bookinfo-ratings"
+  resources: {}
+  
+reviews:
+  replicaCount: 1
+  serviceAccount:
+    create: true
+    name: "bookinfo-reviews"
+  # 支持多个版本的 reviews
+  v1:
+    enabled: true
+    replicaCount: 1
+  v2:
+    enabled: true
+    replicaCount: 1
+  v3:
+    enabled: true
+    replicaCount: 1
+  resources: {}
+
+# 服务配置
+service:
+  type: ClusterIP
+  port: 9080
+
+# 卷配置
+volumes:
+  tmp:
+    enabled: true
+    size: 100Mi
+  wlp-output:
+    enabled: true
+    size: 100Mi

@@ -1,0 +1,19 @@
+{{- $serviceName := .serviceName -}}
+{{- $serviceLabels := .serviceLabels -}}
+{{- $selectorLabels := .selectorLabels -}}
+{{- $port := .port -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $serviceName }}
+  labels:
+    {{- include "bookinfo.labels" $ | nindent 4 }}
+    {{- toYaml $serviceLabels | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ $port }}
+    targetPort: {{ $port }}
+    name: http
+  selector:
+    {{- toYaml $selectorLabels | nindent 4 }}

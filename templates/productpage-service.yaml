@@ -1,0 +1,9 @@
+{{- include "bookinfo._service" (dict 
+  "serviceName" "productpage"
+  "serviceLabels" (dict "app" "productpage" "service" "productpage")
+  "selectorLabels" (dict "app" "productpage")
+  "port" .Values.service.port
+  "Values" .Values
+  "Chart" .Chart
+  "Release" .Release
+) }}

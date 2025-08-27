@@ -1,0 +1,87 @@
+{{- $deploymentName := .deploymentName -}}
+{{- $component := .component -}}
+{{- $version := .version -}}
+{{- $serviceAccount := .serviceAccount -}}
+{{- $imageName := .imageName -}}
+{{- $replicaCount := .replicaCount -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $deploymentName }}
+  labels:
+    {{- include "bookinfo.labels" $ | nindent 4 }}
+    app: {{ $component }}
+    version: {{ $version }}
+spec:
+  replicas: {{ $replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ $component }}
+      version: {{ $version }}
+      {{- include "bookinfo.selectorLabels" $ | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: {{ $component }}
+        version: {{ $version }}
+        {{- include "bookinfo.selectorLabels" $ | nindent 8 }}
+    spec:
+      serviceAccountName: {{ $serviceAccount.name }}
+      containers:
+      - name: {{ $component }}
+        image: {{ include "bookinfo.image" (dict "imageRoot" $ "imageName" $imageName) }}
+        imagePullPolicy: IfNotPresent
+        {{- if .Values.probes.liveness.enabled }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.probes.liveness.path }}
+            port: {{ .Values.service.port }}
+          initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+        {{- end }}
+        {{- if .Values.probes.readiness.enabled }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.probes.readiness.path }}
+            port: {{ .Values.service.port }}
+          initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+        {{- end }}
+        ports:
+        - containerPort: {{ .Values.service.port }}
+        {{- with .resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- else }}
+        resources:
+          {{- toYaml $.Values.global.resources | nindent 10 }}
+        {{- end }}
+        env:
+        - name: LOG_DIR
+          value: "/tmp/logs"
+        {{- if or (eq $component "reviews") (eq $component "productpage") }}
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        {{- if eq $component "reviews" }}
+        - name: wlp-output
+          mountPath: /opt/ibm/wlp/output
+        {{- end }}
+        {{- end }}
+        securityContext:
+          runAsUser: 1000
+      {{- if or (eq $component "reviews") (eq $component "productpage") }}
+      volumes:
+      - name: tmp
+        emptyDir:
+          {{- if .Values.volumes.tmp.enabled }}
+          sizeLimit: {{ .Values.volumes.tmp.size }}
+          {{- end }}
+      {{- if eq $component "reviews" }}
+      - name: wlp-output
+        emptyDir:
+          {{- if .Values.volumes.wlp-output.enabled }}
+          sizeLimit: {{ .Values.volumes.wlp-output.size }}
+          {{- end }}
+      {{- end }}
+      {{- end }}

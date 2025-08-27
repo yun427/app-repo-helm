@@ -1,0 +1,12 @@
+{{- include "bookinfo._deployment" (dict 
+  "deploymentName" "ratings-v1"
+  "component" "ratings"
+  "version" "v1"
+  "serviceAccount" .Values.ratings.serviceAccount
+  "imageName" "examples-bookinfo-ratings-v1"
+  "replicaCount" .Values.ratings.replicaCount
+  "resources" .Values.ratings.resources
+  "Values" .Values
+  "Chart" .Chart
+  "Release" .Release
+) }}
