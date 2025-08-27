@@ -1,8 +1,8 @@
 apiVersion: v2
 name: bookinfo
 description: A Helm chart for the Bookinfo application
-version: 0.1.1
-appVersion: "1.18.0"
+version: 0.1.2
+appVersion: "1.20.2"
 # dependencies:
 #   - name: common
 #     version: "^2.0.0"
