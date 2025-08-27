@@ -1,3 +1,16 @@
+# 探针配置
+probes:
+  liveness:
+    enabled: true
+    path: /health
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readiness:
+    enabled: true
+    path: /health
+    initialDelaySeconds: 5
+    periodSeconds: 10
+
 # 全局配置
 global:
   imageRegistry: "swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/istio"
@@ -66,6 +79,6 @@ volumes:
   tmp:
     enabled: true
     size: 100Mi
-  wlp-output:
+  wlp_output:
     enabled: true
     size: 100Mi

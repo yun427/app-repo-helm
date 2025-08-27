@@ -1,3 +1,4 @@
+{{- define "bookinfo._service" -}}
 {{- $serviceName := .serviceName -}}
 {{- $serviceLabels := .serviceLabels -}}
 {{- $selectorLabels := .selectorLabels -}}
@@ -17,3 +18,4 @@ spec:
     name: http
   selector:
     {{- toYaml $selectorLabels | nindent 4 }}
+{{- end -}}

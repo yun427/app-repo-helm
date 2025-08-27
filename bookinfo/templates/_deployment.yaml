@@ -1,3 +1,4 @@
+{{- define "bookinfo._deployment" -}}
 {{- $deploymentName := .deploymentName -}}
 {{- $component := .component -}}
 {{- $version := .version -}}
@@ -80,8 +81,9 @@ spec:
       {{- if eq $component "reviews" }}
       - name: wlp-output
         emptyDir:
-        {{- if .Values.volumes.wlp-output.enabled }}
-          sizeLimit: {{ .Values.volumes.wlp-output.size }}
+        {{- if .Values.volumes.wlp_output.enabled }}
+          sizeLimit: {{ .Values.volumes.wlp_output.size }}
         {{- end }}
       {{- end }}
       {{- end }}
+{{- end -}}

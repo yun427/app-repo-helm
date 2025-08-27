@@ -42,7 +42,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "bookinfo.image" -}}
 {{- $registry := .imageRoot.Values.global.imageRegistry | default .imageRoot.Values.imageRegistry -}}
 {{- $repository := .imageName -}}
-{{- $tag := .imageRoot.Values.global.imageTag | default .imageRoot.Values.imageTag | default .Chart.AppVersion -}}
+{{- $tag := .imageRoot.Values.global.imageTag | default .imageRoot.Values.imageTag | default .imageRoot.Chart.AppVersion -}}
 {{- if $registry }}
 {{- printf "%s/%s:%s" $registry $repository $tag -}}
 {{- else }}
