@@ -74,14 +74,14 @@ spec:
       volumes:
       - name: tmp
         emptyDir:
-          {{- if .Values.volumes.tmp.enabled }}
+        {{- if .Values.volumes.tmp.enabled }}
           sizeLimit: {{ .Values.volumes.tmp.size }}
-          {{- end }}
+        {{- end }}
       {{- if eq $component "reviews" }}
       - name: wlp-output
         emptyDir:
-          {{- if .Values.volumes.wlp-output.enabled }}
+        {{- if .Values.volumes.wlp-output.enabled }}
           sizeLimit: {{ .Values.volumes.wlp-output.size }}
-          {{- end }}
+        {{- end }}
       {{- end }}
       {{- end }}

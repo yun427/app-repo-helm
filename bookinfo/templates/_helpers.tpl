@@ -54,9 +54,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 创建服务账户名称
 */}}
 {{- define "bookinfo.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
+{{- if .Values.serviceAccount.create }}
     {{ default (include "bookinfo.fullname" .) .Values.serviceAccount.name }}
-{{- else -}}
+{{- else }}
     {{ default "default" .Values.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}
